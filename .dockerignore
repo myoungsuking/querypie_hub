@@ -1,0 +1,67 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies
+node_modules
+npm-debug.log
+package-lock.json
+
+# Logs
+*.log
+*.pid
+qp_hub.log
+server.log
+logs/
+
+# SSL Certificates (컨테이너 내부에서 생성)
+*.pem
+key.pem
+cert.pem
+
+# Environment variables
+.env
+.env.local
+compose-env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Build
+dist
+build
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+docker-entrypoint.sh
+
+# Scripts (개발용)
+scripts/
+run*.sh
+*.sh
+
+# Documentation
+README.md
+DEPLOY_SETUP.md
+*.md
+
+# Test
+test
+tests
+*.test.js
+
+# Misc
+tt
+styles.css
+server_old.js
+

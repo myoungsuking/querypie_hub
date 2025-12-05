@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   qp-hub:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: qp-hub:latest
     container_name: qp-hub
     restart: unless-stopped
     env_file:
@@ -17,8 +20,6 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
-      - ./key.pem:/app/key.pem:ro
-      - ./cert.pem:/app/cert.pem:ro
     networks:
       - qp-hub-network
     healthcheck:
@@ -32,32 +33,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    depends_on:
-      - ssl-generator
-
-  ssl-generator:
-    image: alpine:latest
-    container_name: qp-hub-ssl-generator
-    volumes:
-      - ./:/certs
-    command: >
-      sh -c "
-      if [ ! -f /certs/key.pem ] || [ ! -f /certs/cert.pem ]; then
-        echo '🔐 SSL 인증서 생성 중...';
-        apk add --no-cache openssl;
-        openssl req -x509 -newkey rsa:2048 -nodes \
-          -keyout /certs/key.pem \
-          -out /certs/cert.pem \
-          -days 365 \
-          -subj '/CN=${HOST:-localhost}';
-        chmod 644 /certs/key.pem /certs/cert.pem;
-        echo '✅ SSL 인증서 생성 완료';
-      else
-        echo 'ℹ️  기존 SSL 인증서 사용';
-      fi
-      "
-    networks:
-      - qp-hub-network
 
 networks:
   qp-hub-network:
