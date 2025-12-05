@@ -1,0 +1,63 @@
+name: Docker Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: querypie-hub:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Save Docker image
+      run: |
+        docker save querypie-hub:latest | gzip > image.tar.gz
+        
+    - name: Deploy to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        port: ${{ secrets.DEPLOY_PORT || 22 }}
+        source: "image.tar.gz"
+        target: "/tmp/"
+        
+    - name: Load and run Docker image
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        port: ${{ secrets.DEPLOY_PORT || 22 }}
+        script: |
+          cd /tmp
+          docker load < image.tar.gz
+          docker stop querypie-hub || true
+          docker rm querypie-hub || true
+          docker run -d \
+            --name querypie-hub \
+            --restart unless-stopped \
+            -p 3000:3000 \
+            -v $(pwd)/key.pem:/app/key.pem:ro \
+            -v $(pwd)/cert.pem:/app/cert.pem:ro \
+            querypie-hub:latest
+          rm -f image.tar.gz
+

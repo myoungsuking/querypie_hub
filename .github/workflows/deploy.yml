@@ -1,0 +1,91 @@
+name: Deploy QP Hub
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Generate SSL certificates
+      run: |
+        openssl req -x509 -newkey rsa:2048 -nodes \
+          -keyout key.pem -out cert.pem \
+          -days 365 -subj "/CN=localhost"
+      continue-on-error: true
+      
+    - name: Deploy to server via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        port: ${{ secrets.DEPLOY_PORT || 22 }}
+        script: |
+          cd /home/qp_hub || cd /opt/qp_hub
+          git pull origin main
+          npm ci --production
+          
+          # SSL 인증서가 없으면 생성
+          if [ ! -f key.pem ] || [ ! -f cert.pem ]; then
+            openssl req -x509 -newkey rsa:2048 -nodes \
+              -keyout key.pem -out cert.pem \
+              -days 365 -subj "/CN=localhost"
+          fi
+          
+          # PM2로 재시작 (PM2가 설치되어 있는 경우)
+          if command -v pm2 &> /dev/null; then
+            pm2 restart qp-hub || pm2 start ecosystem.config.js --name qp-hub
+          else
+            # systemd 서비스 재시작
+            sudo systemctl restart qp-hub || true
+            # 또는 직접 재시작
+            pkill -f "node.*server.js" || true
+            nohup node server.js > server.log 2>&1 &
+          fi
+
+  docker-build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+      if: ${{ secrets.DOCKER_USERNAME != '' }}
+      
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: ${{ secrets.DOCKER_USERNAME != '' }}
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/querypie-hub:latest
+          ${{ secrets.DOCKER_USERNAME }}/querypie-hub:${{ github.sha }}
+        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/querypie-hub:buildcache
+        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/querypie-hub:buildcache,mode=max
+
