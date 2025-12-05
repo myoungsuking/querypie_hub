@@ -220,6 +220,89 @@ npm run dev
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다.
 
+## 클라우드 호스팅 (무료 옵션)
+
+GitHub에서 직접 서버를 구동할 수는 없지만, 다음 무료 클라우드 서비스를 사용할 수 있습니다:
+
+### 1. Vercel (권장)
+- Node.js 서버 지원
+- 자동 HTTPS
+- 무료 플랜 제공
+- GitHub 연동 가능
+
+**설정 방법:**
+1. [Vercel](https://vercel.com)에 가입
+2. GitHub 저장소 연결
+3. 프로젝트 배포 (자동)
+
+**또는 GitHub Actions 사용:**
+- GitHub Secrets에 `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` 추가
+- `main` 브랜치에 푸시 시 자동 배포
+
+### 2. Railway
+- Node.js 서버 지원
+- 자동 HTTPS
+- 무료 크레딧 제공
+- 간단한 설정
+
+**설정 방법:**
+1. [Railway](https://railway.app)에 가입
+2. GitHub 저장소 연결
+3. 프로젝트 배포
+
+**또는 GitHub Actions 사용:**
+- GitHub Secrets에 `RAILWAY_TOKEN` 추가
+- `main` 브랜치에 푸시 시 자동 배포
+
+### 3. Render
+- Node.js 서버 지원
+- 자동 HTTPS
+- 무료 플랜 제공
+
+**설정 방법:**
+1. [Render](https://render.com)에 가입
+2. GitHub 저장소 연결
+3. Web Service 생성
+
+### 4. Fly.io
+- Node.js 서버 지원
+- 글로벌 배포
+- 무료 플랜 제공
+
+## CI/CD 배포
+
+이 프로젝트는 GitHub Actions를 사용하여 자동 배포를 지원합니다.
+
+### GitHub Actions 설정
+
+1. **GitHub 저장소 설정에서 Secrets 추가:**
+   - `DEPLOY_HOST`: 배포할 서버 IP 주소
+   - `DEPLOY_USER`: SSH 사용자명
+   - `DEPLOY_SSH_KEY`: SSH 개인 키
+   - `DEPLOY_PORT`: SSH 포트 (기본값: 22)
+   - `DOCKER_USERNAME`: Docker Hub 사용자명 (선택)
+   - `DOCKER_PASSWORD`: Docker Hub 비밀번호 (선택)
+
+2. **자동 배포:**
+   - `main` 브랜치에 푸시하면 자동으로 배포됩니다
+   - 또는 GitHub Actions 탭에서 수동으로 실행할 수 있습니다
+
+### 배포 방법
+
+#### 방법 1: SSH 직접 배포 (권장)
+- 코드를 서버에 직접 배포
+- `deploy.yml` 워크플로우 사용
+- PM2 또는 systemd로 자동 재시작
+
+#### 방법 2: Docker 배포
+- Docker 이미지를 빌드하여 배포
+- `docker-deploy.yml` 워크플로우 사용
+- Docker 컨테이너로 실행
+
+#### 방법 3: Docker Hub 푸시
+- Docker 이미지를 Docker Hub에 푸시
+- `deploy.yml`의 `docker-build` 작업 사용
+
 ## 문의
 
 프로젝트에 대한 문의사항이 있으시면 이슈를 등록해주세요.
