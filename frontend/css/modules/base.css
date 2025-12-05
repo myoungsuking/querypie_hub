@@ -1,0 +1,118 @@
+/* ============================================
+   Base Styles - Reset & Typography
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 11px;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll; /* 항상 세로 스크롤바 표시 */
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 입력 필드 */
+input[type="text"], textarea {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 11px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    background-color: #ffffff;
+    color: #1e293b;
+}
+
+input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+input[type="text"]:hover, textarea:hover {
+    border-color: #cbd5e1;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 체크박스 스타일 */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 성공/에러 메시지 */
+.message {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.form-help {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+    font-size: 12px;
+}
+

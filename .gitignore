@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+*.pid
+qp_hub.log
+server.log
+
+# SSL Certificates (민감 정보)
+*.pem
+key.pem
+cert.pem
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/

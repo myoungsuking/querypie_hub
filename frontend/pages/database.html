@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 관리 - Myoungsu Hub</title>
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="/favicon.ico" alt="Myoungsu Hub" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                    Myoungsu Hub
+                </h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="../index.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>대시보드</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="server.html">
+                        <i class="fas fa-server"></i>
+                        <span>서버</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="database.html">
+                        <i class="fas fa-database"></i>
+                        <span>DB</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="user.html">
+                        <i class="fas fa-user-circle"></i>
+                        <span>사용자</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 데이터베이스 관리 페이지 -->
+            <div id="database-page" class="page active">
+                <div class="page-header">
+                    <h1>데이터베이스 관리</h1>
+                    <p>데이터베이스 정보를 업로드하고 관리하세요</p>
+                </div>
+                
+                <!-- 사용 가이드 -->
+                <div class="usage-guide" style="position: relative;">
+                    <h3>
+                        <i class="fas fa-clipboard-list"></i> 사용 가이드
+                        <span class="help-icon">
+                            <i class="fas fa-question-circle"></i>
+                            <!-- Create DB Connection API 가이드 툴팁 -->
+                            <div id="api-guide-tooltip" class="tooltip-content" style="display: none;">
+                                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px;">
+                                    <h4 style="margin-top: 0; color: #1e293b; margin-bottom: 15px;">
+                                        <i class="fas fa-info-circle"></i> Create DB Connection API 가이드
+                                    </h4>
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">API 엔드포인트</h5>
+                                    <p style="margin: 8px 0; padding: 10px; background: #f8fafc; border-radius: 6px; font-family: monospace; color: #1e293b; font-size: 13px;">
+                                        POST /api/external/v2/dac/connections
+                                    </p>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">Request Body 필수 필드</h5>
+                                    <ul style="margin: 8px 0; padding-left: 20px; color: #475569; font-size: 13px; line-height: 1.8;">
+                                        <li><strong>name</strong>: 연결 이름 (필수) - 예: production_db</li>
+                                        <li><strong>databaseType</strong>: 데이터베이스 타입 (필수) - Mysql, MariaDB, PostgreSQL, MongoDB, Oracle, SQLServer 등</li>
+                                        <li><strong>userName</strong>: 데이터베이스 사용자 이름 (필수)</li>
+                                        <li><strong>password</strong>: 데이터베이스 비밀번호 (필수)</li>
+                                        <li><strong>hideCredential</strong>: 연결 목록에서 자격증명 숨기기 (필수, 기본값: false)</li>
+                                        <li><strong>useProxy</strong>: 프록시 사용 여부 (필수, 기본값: true)</li>
+                                        <li><strong>maxDisplayRows</strong>: 최대 표시 행 수 (필수, 기본값: -1, 무제한)</li>
+                                        <li><strong>maxExportRows</strong>: 최대 내보내기 행 수 (필수, 기본값: -1, 무제한)</li>
+                                        <li><strong>useFixedCredentialForAgent</strong>: Agent용 고정 자격증명 사용 (필수, 기본값: false)</li>
+                                        <li><strong>clusters</strong>: 클러스터 목록 (필수) - host, port, type 포함</li>
+                                        <li><strong>connectionAccount</strong>: 연결 계정 정보 (필수) - username, password 포함</li>
+                                    </ul>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">Cluster Type 설명</h5>
+                                    <div style="margin: 8px 0; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 13px;">
+                                        <p style="margin: 4px 0;"><strong>Primary:</strong> 주 데이터베이스 (마스터)</p>
+                                        <p style="margin: 4px 0;"><strong>Secondary:</strong> 보조 데이터베이스 (복제본)</p>
+                                        <p style="margin: 4px 0;"><strong>Single:</strong> 단일 데이터베이스</p>
+                                    </div>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">Database Type 예시</h5>
+                                    <div style="margin: 8px 0; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 12px;">
+                                        <p style="margin: 0;">Mysql, MariaDB, PostgreSQL, Redshift, SQLServer, AzureSQL, Oracle, Tibero, MongoDB, BigQuery, Presto, Trino, Hive, Cassandra, DynamoDB, Snowflake, Impala, Redis, SingleStore, Hana, CustomDataSource</p>
+                                    </div>
+                                    
+                                    <p style="margin-top: 12px; color: #64748b; font-size: 12px; line-height: 1.6;">
+                                        <i class="fas fa-lightbulb"></i> <strong>팁:</strong> CSV 파일에는 name, databaseType, userName, password, host, port, clusterType가 모두 필수입니다. 나머지 필드는 기본값으로 자동 설정됩니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </span>
+                    </h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>CSV Import</h4>
+                                <p>템플릿을 다운로드하여 데이터베이스 정보를 입력한 후 CSV 파일을 드래그 앤 드롭하거나 선택하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>API 설정</h4>
+                                <p>대상 URL과 API Token을 입력한 후 "데이터베이스 정보 업로드" 버튼을 클릭하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>결과 확인</h4>
+                                <p>각 항목의 성공/실패 여부를 확인하고, 실패한 항목은 재전송할 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV Import 섹션 -->
+                <div class="user-registration-section">
+                    <h3>CSV Import</h3>
+                    <div class="csv-import-section">
+                        <div class="csv-template">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h3>템플릿 다운로드</h3>
+                                <button type="button" class="btn-download" onclick="downloadDatabaseTemplate()">
+                                    <i class="fas fa-download"></i>
+                                    템플릿 다운로드
+                                </button>
+                            </div>
+                            <p>CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요. 파일을 업로드하면 표에 자동으로 데이터가 표시됩니다.</p>
+                            <div class="template-example">
+                                <code>
+                                    name,databaseType,userName,password,host,port,clusterType<br>
+                                    production_db,PostgreSQL,admin,password123,db1.example.com,5432,Primary<br>
+                                    production_db,PostgreSQL,admin,password123,db2.example.com,5432,Secondary<br>
+                                    test_db,MySQL,user,pass456,test-db.example.com,3306,Single<br>
+                                    dev_db,MongoDB,dev_user,dev_pass789,dev-db.example.com,27017,Primary
+                                </code>
+                                <p style="margin-top: 10px; font-size: 12px; color: #64748b;">
+                                    <strong>databaseType:</strong> Mysql, MariaDB, PostgreSQL, MongoDB, Oracle, SQLServer 등<br>
+                                    <strong>clusterType:</strong> Primary, Secondary, Single 중 하나<br>
+                                    <strong>💡 팁:</strong> 같은 name을 가진 여러 행을 입력하면 하나의 DB Connection에 여러 클러스터가 추가됩니다.
+                                </p>
+                            </div>
+                            <div class="csv-actions">
+                                <div class="file-upload-area" id="database-csv-import-area">
+                                    <i class="fas fa-file-import"></i>
+                                    <p id="database-csv-file-text">CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택</p>
+                                    <input type="file" id="database-csv-import-file" accept=".csv" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 데이터베이스 테이블 -->
+                <div class="user-table-section">
+                    <h3>데이터베이스 목록</h3>
+                    <p>CSV 파일을 import하면 아래 표에 데이터베이스 정보가 표시됩니다.</p>
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-controls">
+                                <span id="database-count">총 0개</span>
+                            </div>
+                        </div>
+                        
+                        <table id="database-table" class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>순번</th>
+                                    <th>Name</th>
+                                    <th>Database Type</th>
+                                    <th>User Name</th>
+                                    <th>Password</th>
+                                    <th>Host</th>
+                                    <th>Port</th>
+                                    <th>Cluster Type</th>
+                                    <th>결과</th>
+                                    <th>작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="database-table-body">
+                                <tr>
+                                    <td colspan="10" style="text-align: center; padding: 40px; color: #6c757d;">
+                                        CSV 파일을 import하여 데이터베이스 정보를 표시하세요.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="upload-card">
+                    <h2>데이터베이스 정보 업로드</h2>
+                    <p>데이터베이스 정보를 등록합니다.</p>
+                    
+                    <form id="database-form" class="upload-form">
+
+                        <div class="form-group">
+                            <label for="database-target-url">대상 URL *</label>
+                            <input type="text" id="database-target-url" placeholder="예: https://api.example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="database-token">API Token *</label>
+                            <input type="text" id="database-token" placeholder="Bearer token 또는 API key" required>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-upload"></i>
+                                데이터베이스 정보 업로드
+                            </button>
+                            <button type="button" class="btn-retry" onclick="retryFailedDatabases()" style="display: none;">
+                                <i class="fas fa-redo"></i>
+                                실패 항목 재전송
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">결과</h2>
+            <p id="modal-message"></p>
+            <div id="modal-details"></div>
+        </div>
+    </div>
+
+    <!-- Toast 알림 컨테이너 -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/databaseManager.js"></script>
+    <script>
+        // 툴팁 이벤트 리스너
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpIcon = document.querySelector('.help-icon');
+            const tooltip = document.getElementById('api-guide-tooltip');
+            
+            if (helpIcon && tooltip) {
+                let hideTimeout;
+                
+                helpIcon.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    tooltip.style.display = 'block';
+                });
+                
+                helpIcon.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(function() {
+                        if (!tooltip.matches(':hover')) {
+                            tooltip.style.display = 'none';
+                        }
+                    }, 100);
+                });
+                
+                tooltip.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    tooltip.style.display = 'block';
+                });
+                
+                tooltip.addEventListener('mouseleave', function() {
+                    tooltip.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

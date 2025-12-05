@@ -1,0 +1,36 @@
+[Unit]
+Description=QP Hub System - API Data Management Server
+Documentation=https://github.com/qp-hub/system
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/qp_hub
+ExecStart=/usr/bin/node /home/qp_hub/server.js
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qp-hub
+
+# 환경 변수
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+# 보안 설정
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/qp_hub
+
+# 리소스 제한
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target

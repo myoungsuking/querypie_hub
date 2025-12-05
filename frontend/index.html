@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myoungsu Hub - 대시보드</title>
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="/favicon.ico" alt="Myoungsu Hub" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                    Myoungsu Hub
+                </h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="/">
+                        <i class="fas fa-chart-line"></i>
+                        <span>대시보드</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="pages/server.html">
+                        <i class="fas fa-server"></i>
+                        <span>서버</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="pages/database.html">
+                        <i class="fas fa-database"></i>
+                        <span>DB</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="pages/user.html">
+                        <i class="fas fa-user-circle"></i>
+                        <span>사용자</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 대시보드 페이지 -->
+            <div class="page active">
+                <div class="page-header">
+                    <h1>대시보드</h1>
+                    <p>Myoungsu Hub의 전체 현황을 확인하세요</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>서버 관리</h3>
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="card-content">
+                            <p>서버 정보를 업로드하고 관리합니다.</p>
+                            <a href="pages/server.html" class="card-link">서버 관리로 이동</a>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>데이터베이스 관리</h3>
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="card-content">
+                            <p>데이터베이스 정보를 업로드하고 관리합니다.</p>
+                            <a href="pages/database.html" class="card-link">DB 관리로 이동</a>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>사용자 관리</h3>
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <p>사용자 정보를 등록하고 관리합니다.</p>
+                            <a href="pages/user.html" class="card-link">사용자 관리로 이동</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

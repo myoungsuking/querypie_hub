@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 관리 - Myoungsu Hub</title>
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="/favicon.ico" alt="Myoungsu Hub" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                    Myoungsu Hub
+                </h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="../index.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>대시보드</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="server.html">
+                        <i class="fas fa-server"></i>
+                        <span>서버</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="database.html">
+                        <i class="fas fa-database"></i>
+                        <span>DB</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="user.html">
+                        <i class="fas fa-user-circle"></i>
+                        <span>사용자</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 사용자 관리 페이지 -->
+            <div id="user-page" class="page active">
+                <div class="page-header">
+                    <h1>사용자 관리</h1>
+                    <p>사용자 정보를 등록하고 관리하세요</p>
+                </div>
+                
+                <!-- 사용 가이드 -->
+                <div class="usage-guide">
+                    <h3><i class="fas fa-clipboard-list"></i> 사용 가이드</h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>CSV Import</h4>
+                                <p>템플릿을 다운로드하여 사용자 정보를 입력한 후 CSV 파일을 드래그 앤 드롭하거나 선택하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>API 설정</h4>
+                                <p>대상 URL과 API Token을 입력한 후 "사용자 등록" 버튼을 클릭하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>결과 확인</h4>
+                                <p>각 항목의 성공/실패 여부를 확인하고, 실패한 항목은 재전송할 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV Import 섹션 -->
+                <div class="user-registration-section">
+                    <h3>CSV Import</h3>
+                    <div class="csv-import-section">
+                        <div class="csv-template">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h3>템플릿 다운로드</h3>
+                                <button type="button" class="btn-download" onclick="downloadCSVTemplate()">
+                                    <i class="fas fa-download"></i>
+                                    템플릿 다운로드
+                                </button>
+                            </div>
+                            <p>CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요. 파일을 업로드하면 표에 자동으로 데이터가 표시됩니다.</p>
+                            <div class="template-example">
+                                <code>
+                                    email,loginId,name<br>
+                                    user1@example.com,user1,홍길동<br>
+                                    user2@example.com,user2,김철수
+                                </code>
+                            </div>
+                            <div class="csv-actions">
+                                <div class="file-upload-area" id="csv-import-area">
+                                    <i class="fas fa-file-import"></i>
+                                    <p id="csv-file-text">CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택</p>
+                                    <input type="file" id="csv-import-file" accept=".csv" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                        <!-- 사용자 테이블 -->
+                        <div class="user-table-section">
+                            <h3>사용자 목록</h3>
+                            <p>CSV 파일을 import하면 아래 표에 사용자 정보가 표시됩니다.</p>
+                            <div class="table-container">
+                                <div class="table-header">
+                                    <div class="table-controls">
+                                        <span id="user-count">총 0명</span>
+                                    </div>
+                                </div>
+                                
+                                <table id="user-table" class="user-table">
+                                    <thead>
+                                        <tr>
+                                            <th>순번</th>
+                                            <th>이메일</th>
+                                            <th>로그인 ID</th>
+                                            <th>이름</th>
+                                            <th>결과</th>
+                                            <th>작업</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="user-table-body">
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; padding: 40px; color: #6c757d;">
+                                                CSV 파일을 import하여 사용자 정보를 표시하세요.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                <div class="upload-card">
+                    <h2>사용자 정보 업로드</h2>
+                    <p>사용자 정보를 등록합니다.</p>
+                    
+                    <form id="user-form" class="upload-form">
+                        <div class="form-group">
+                            <label for="default-password">초기 비밀번호 *</label>
+                            <input type="password" id="default-password" placeholder="초기 비밀번호를 입력하세요 (최소 9자, 대소문자, 숫자, 특수문자 포함)" required>
+                            <small class="form-help">모든 사용자의 초기 비밀번호로 설정됩니다. 사용자들이 첫 로그인 후 비밀번호를 변경할 수 있습니다.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="user-target-url">대상 URL *</label>
+                            <input type="text" id="user-target-url" placeholder="예: https://api.example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="user-token">API Token *</label>
+                            <input type="text" id="user-token" placeholder="Bearer token 또는 API key" required>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <button type="button" class="submit-btn" onclick="registerUsers()">
+                                <i class="fas fa-user-plus"></i>
+                                사용자 등록
+                            </button>
+                            <button type="button" class="btn-retry" onclick="retryFailedUsers()" style="display: none;">
+                                <i class="fas fa-redo"></i>
+                                실패 항목 재전송
+                            </button>
+                            <button type="button" class="btn-download-results" onclick="downloadResults()">
+                                <i class="fas fa-download"></i>
+                                결과 다운로드
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">결과</h2>
+            <p id="modal-message"></p>
+            <div id="modal-details"></div>
+        </div>
+    </div>
+
+    <!-- Toast 알림 컨테이너 -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/app.js"></script>
+     <script src="../js/toast.js"></script>
+    <script src="../js/userManager.js"></script>
+</body>
+</html>

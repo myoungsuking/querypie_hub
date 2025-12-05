@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서버 관리 - Myoungsu Hub</title>
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>
+                    <img src="/favicon.ico" alt="Myoungsu Hub" width="18" height="18" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                    Myoungsu Hub
+                </h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="../index.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>대시보드</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="server.html">
+                        <i class="fas fa-server"></i>
+                        <span>서버</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="database.html">
+                        <i class="fas fa-database"></i>
+                        <span>DB</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="user.html">
+                        <i class="fas fa-user-circle"></i>
+                        <span>사용자</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="main-content">
+            <!-- 서버 관리 페이지 -->
+            <div id="server-page" class="page active">
+                <div class="page-header">
+                    <h1>서버 관리</h1>
+                    <p>서버 정보를 업로드하고 관리하세요</p>
+                </div>
+                
+                <!-- 사용 가이드 -->
+                <div class="usage-guide" style="position: relative;">
+                    <h3>
+                        <i class="fas fa-clipboard-list"></i> 사용 가이드
+                        <span class="help-icon">
+                            <i class="fas fa-question-circle"></i>
+                            <!-- Create Server API 가이드 툴팁 -->
+                            <div id="api-guide-tooltip" class="tooltip-content" style="display: none;">
+                                <div style="background: white; padding: 20px; border-radius: 8px; max-width: 600px;">
+                                    <h4 style="margin-top: 0; color: #1e293b; margin-bottom: 15px;">
+                                        <i class="fas fa-info-circle"></i> Create Server API 가이드
+                                    </h4>
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">API 엔드포인트</h5>
+                                    <p style="margin: 8px 0; padding: 10px; background: #f8fafc; border-radius: 6px; font-family: monospace; color: #1e293b; font-size: 13px;">
+                                        POST /api/external/v2/sac/servers
+                                    </p>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">Request Body 필수 필드</h5>
+                                    <ul style="margin: 8px 0; padding-left: 20px; color: #475569; font-size: 13px; line-height: 1.8;">
+                                        <li><strong>name</strong>: 서버 이름 (필수) - 예: web-server-01</li>
+                                        <li><strong>host</strong>: 서버 호스트 (필수) - 예: 192.168.1.10</li>
+                                        <li><strong>sshPort</strong>: SSH 포트 (필수) - 예: 22</li>
+                                        <li><strong>osType</strong>: 서버 OS 타입 (필수) - ETC, AWS_LINUX, UBUNTU, CENTOS, RHEL 중 하나</li>
+                                        <li><strong>ftpPort</strong>: FTP 포트 (필수, 기본값: 21)</li>
+                                        <li><strong>telnetPort</strong>: Telnet 포트 (필수, 기본값: 23)</li>
+                                        <li><strong>vncPort</strong>: VNC 포트 (필수, 기본값: 5900)</li>
+                                    </ul>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">OS Type 설명</h5>
+                                    <div style="margin: 8px 0; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 13px;">
+                                        <p style="margin: 4px 0;"><strong>ETC:</strong> 기타 Linux 배포판</p>
+                                        <p style="margin: 4px 0;"><strong>AWS_LINUX:</strong> Amazon Linux</p>
+                                        <p style="margin: 4px 0;"><strong>UBUNTU:</strong> Ubuntu</p>
+                                        <p style="margin: 4px 0;"><strong>CENTOS:</strong> CentOS</p>
+                                        <p style="margin: 4px 0;"><strong>RHEL:</strong> Red Hat Enterprise Linux</p>
+                                        <p style="margin: 4px 0; color: #dc2626;"><strong>⚠️ WINDOWS는 지원되지 않습니다.</strong></p>
+                                    </div>
+                                    
+                                    <h5 style="margin-top: 15px; color: #1e293b; font-size: 14px;">주의사항</h5>
+                                    <div style="margin: 8px 0; padding: 12px; background: #fff3cd; border-radius: 6px; border-left: 3px solid #ffc107; font-size: 13px;">
+                                        <ul style="margin: 0; padding-left: 20px; color: #856404;">
+                                            <li>osType에 지정된 값(ETC, AWS_LINUX, UBUNTU, CENTOS, RHEL)이 없다면 자동으로 <strong>ETC</strong>로 등록됩니다.</li>
+                                            <li>Windows는 지원되지 않으므로 CSV 파일에 WINDOWS를 입력하지 마세요.</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <p style="margin-top: 12px; color: #64748b; font-size: 12px; line-height: 1.6;">
+                                        <i class="fas fa-lightbulb"></i> <strong>팁:</strong> CSV 파일에는 name, host, sshPort, osType만 포함하면 됩니다. ftpPort, telnetPort, vncPort는 기본값으로 자동 설정됩니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </span>
+                    </h3>
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>CSV Import</h4>
+                                <p>템플릿을 다운로드하여 서버 정보를 입력한 후 CSV 파일을 드래그 앤 드롭하거나 선택하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>API 설정</h4>
+                                <p>대상 URL과 API Token을 입력한 후 "서버 정보 업로드" 버튼을 클릭하세요.</p>
+                            </div>
+                        </div>
+                        <div class="guide-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>결과 확인</h4>
+                                <p>각 항목의 성공/실패 여부를 확인하고, 실패한 항목은 재전송할 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV Import 섹션 -->
+                <div class="user-registration-section">
+                    <h3>CSV Import</h3>
+                    <div class="csv-import-section">
+                        <div class="csv-template">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <h3>템플릿 다운로드</h3>
+                                <button type="button" class="btn-download" onclick="downloadServerTemplate()">
+                                    <i class="fas fa-download"></i>
+                                    템플릿 다운로드
+                                </button>
+                            </div>
+                            <p>CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요. 파일을 업로드하면 표에 자동으로 데이터가 표시됩니다.</p>
+                            <div class="template-example">
+                                <code>
+                                    name,host,sshPort,osType<br>
+                                    web-server-01,192.168.1.10,22,UBUNTU<br>
+                                    db-server-01,192.168.1.20,22,CENTOS<br>
+                                    app-server-01,192.168.1.30,22,RHEL
+                                </code>
+                                <div style="margin-top: 10px; padding: 10px; background: #fff3cd; border-left: 3px solid #ffc107; border-radius: 4px;">
+                                    <p style="margin: 0 0 5px 0; font-size: 12px; color: #856404; font-weight: 600;">
+                                        <strong>⚠️ osType 필수 사항:</strong>
+                                    </p>
+                                    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #856404;">
+                                        <li><strong>지원 OS:</strong> <code>ETC</code>, <code>AWS_LINUX</code>, <code>UBUNTU</code>, <code>CENTOS</code>, <code>RHEL</code></li>
+                                        <li><strong>Windows는 지원되지 않습니다.</strong></li>
+                                        <li>지정된 값이 없으면 자동으로 <code>ETC</code>로 등록됩니다.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="csv-actions">
+                                <div class="file-upload-area" id="server-csv-import-area">
+                                    <i class="fas fa-file-import"></i>
+                                    <p id="server-csv-file-text">CSV 파일을 드래그 앤 드롭하거나 클릭하여 선택</p>
+                                    <input type="file" id="server-csv-import-file" accept=".csv" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 서버 테이블 -->
+                <div class="user-table-section">
+                    <h3>서버 목록</h3>
+                    <p>CSV 파일을 import하면 아래 표에 서버 정보가 표시됩니다.</p>
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-controls">
+                                <span id="server-count">총 0개</span>
+                            </div>
+                        </div>
+                        
+                        <table id="server-table" class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>순번</th>
+                                    <th>Name</th>
+                                    <th>Host</th>
+                                    <th>SSH Port</th>
+                                    <th>OS Type</th>
+                                    <th>결과</th>
+                                    <th>작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="server-table-body">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 40px; color: #6c757d;">
+                                        CSV 파일을 import하여 서버 정보를 표시하세요.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="upload-card">
+                    <h2>서버 정보 업로드</h2>
+                    <p>서버 정보를 등록합니다.</p>
+                    
+                    <form id="server-form" class="upload-form">
+
+                        <div class="form-group">
+                            <label for="server-target-url">대상 URL *</label>
+                            <input type="text" id="server-target-url" placeholder="예: https://api.example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="server-token">API Token *</label>
+                            <input type="text" id="server-token" placeholder="Bearer token 또는 API key" required>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-upload"></i>
+                                서버 정보 업로드
+                            </button>
+                            <button type="button" class="btn-retry" onclick="retryFailedServers()" style="display: none;">
+                                <i class="fas fa-redo"></i>
+                                실패 항목 재전송
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 결과 모달 -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">결과</h2>
+            <p id="modal-message"></p>
+            <div id="modal-details"></div>
+        </div>
+    </div>
+
+    <!-- Toast 알림 컨테이너 -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/serverManager.js"></script>
+    <script>
+        // 툴팁 이벤트 리스너
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpIcon = document.querySelector('.help-icon');
+            const tooltip = document.getElementById('api-guide-tooltip');
+            
+            if (helpIcon && tooltip) {
+                let hideTimeout;
+                
+                helpIcon.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    tooltip.style.display = 'block';
+                });
+                
+                helpIcon.addEventListener('mouseleave', function() {
+                    hideTimeout = setTimeout(function() {
+                        if (!tooltip.matches(':hover')) {
+                            tooltip.style.display = 'none';
+                        }
+                    }, 100);
+                });
+                
+                tooltip.addEventListener('mouseenter', function() {
+                    clearTimeout(hideTimeout);
+                    tooltip.style.display = 'block';
+                });
+                
+                tooltip.addEventListener('mouseleave', function() {
+                    tooltip.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
