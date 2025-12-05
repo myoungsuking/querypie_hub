@@ -6,7 +6,7 @@
 # Dependencies
 node_modules
 npm-debug.log
-package-lock.json
+# package-lock.json은 포함해야 함
 
 # Logs
 *.log
@@ -43,12 +43,13 @@ build
 Dockerfile
 docker-compose.yml
 .dockerignore
-docker-entrypoint.sh
+# docker-entrypoint.sh는 포함해야 함
 
 # Scripts (개발용)
 scripts/
 run*.sh
 *.sh
+!docker-entrypoint.sh
 
 # Documentation
 README.md

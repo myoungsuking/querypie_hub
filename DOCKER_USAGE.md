@@ -7,7 +7,7 @@ QP Hub는 단일 Docker 이미지로 백엔드와 프론트엔드를 모두 포�
 ### 1. Docker 이미지 빌드
 
 ```bash
-docker build -t qp-hub:latest .
+docker build -t myoungsu-hub:latest .
 ```
 
 ### 2. Docker 이미지 실행
@@ -21,7 +21,7 @@ docker run -d \
   -e PORT=3000 \
   -e USE_HTTPS=true \
   -e NODE_ENV=production \
-  qp-hub:latest
+  myoungsu-hub:latest
 ```
 
 #### compose-env 파일 사용
@@ -44,7 +44,7 @@ docker run -d \
   -e HOST=192.168.10.123 \
   -e PORT=3000 \
   -e USE_HTTPS=true \
-  qp-hub:latest
+  myoungsu-hub:latest
 ```
 
 ## 환경 변수
@@ -76,23 +76,23 @@ docker build -t qp-hub:latest .
 docker login
 
 # 태그 지정
-docker tag qp-hub:latest your-username/qp-hub:latest
+docker tag myoungsu-hub:latest your-username/myoungsu-hub:latest
 
 # 푸시
-docker push your-username/qp-hub:latest
+docker push your-username/myoungsu-hub:latest
 ```
 
 ### 다른 서버에서 사용
 ```bash
 # Docker Hub에서 가져오기
-docker pull your-username/qp-hub:latest
+docker pull your-username/myoungsu-hub:latest
 
 # 실행
 docker run -d \
   --name qp-hub \
   -p 3000:3000 \
   -e HOST=YOUR_IP \
-  your-username/qp-hub:latest
+  your-username/myoungsu-hub:latest
 ```
 
 ## Docker Compose 사용
@@ -123,13 +123,13 @@ docker-compose logs -f
 ### 포트가 이미 사용 중
 ```bash
 # 다른 포트 사용
-docker run -d --name qp-hub -p 8080:3000 -e PORT=3000 qp-hub:latest
+docker run -d --name qp-hub -p 8080:3000 -e PORT=3000 myoungsu-hub:latest
 ```
 
 ### SSL 인증서 오류
 ```bash
 # HTTP 모드로 실행
-docker run -d --name qp-hub -p 3000:3000 -e USE_HTTPS=false qp-hub:latest
+docker run -d --name qp-hub -p 3000:3000 -e USE_HTTPS=false myoungsu-hub:latest
 ```
 
 ### 로그 확인

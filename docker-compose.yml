@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: qp-hub:latest
+    image: myoungsu-hub:latest
     container_name: qp-hub
     restart: unless-stopped
     env_file:
