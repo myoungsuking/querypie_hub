@@ -13,6 +13,9 @@ server.log
 key.pem
 cert.pem
 
+# Docker Compose 환경 변수 (사용자별 설정)
+compose-env
+
 # Environment variables
 .env
 .env.local

@@ -5,18 +5,24 @@ services:
     build: .
     container_name: qp-hub
     restart: unless-stopped
+    env_file:
+      - compose-env
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:${PORT:-3000}"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      - HOST=${HOST:-0.0.0.0}
+      - USE_HTTPS=${USE_HTTPS:-true}
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
+      - ./key.pem:/app/key.pem:ro
+      - ./cert.pem:/app/cert.pem:ro
     networks:
       - qp-hub-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:${PORT:-3000}/api/dashboard', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -26,6 +32,32 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    depends_on:
+      - ssl-generator
+
+  ssl-generator:
+    image: alpine:latest
+    container_name: qp-hub-ssl-generator
+    volumes:
+      - ./:/certs
+    command: >
+      sh -c "
+      if [ ! -f /certs/key.pem ] || [ ! -f /certs/cert.pem ]; then
+        echo '🔐 SSL 인증서 생성 중...';
+        apk add --no-cache openssl;
+        openssl req -x509 -newkey rsa:2048 -nodes \
+          -keyout /certs/key.pem \
+          -out /certs/cert.pem \
+          -days 365 \
+          -subj '/CN=${HOST:-localhost}';
+        chmod 644 /certs/key.pem /certs/cert.pem;
+        echo '✅ SSL 인증서 생성 완료';
+      else
+        echo 'ℹ️  기존 SSL 인증서 사용';
+      fi
+      "
+    networks:
+      - qp-hub-network
 
 networks:
   qp-hub-network:
