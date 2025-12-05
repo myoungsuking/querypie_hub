@@ -45,13 +45,31 @@ qp_hub/
 
 ## 설치 및 실행
 
-### 1. 의존성 설치
+### 1. 저장소 클론
 ```bash
-cd qp_hub
+git clone https://github.com/myoungsuking/querypie_hub.git
+cd querypie_hub
+```
+
+### 2. 의존성 설치
+```bash
 npm install
 ```
 
-### 2. 서버 시작
+### 3. SSL 인증서 생성 (HTTPS 사용 시 필수)
+```bash
+# 자체 서명 인증서 생성 (개발/테스트용)
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+# 또는 간단한 방법
+openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost"
+```
+
+**참고:** 
+- 프로덕션 환경에서는 공인 인증 기관(CA)에서 발급한 인증서를 사용하세요.
+- 자체 서명 인증서는 브라우저에서 보안 경고가 표시됩니다.
+
+### 4. 서버 시작
 
 #### 통합 스크립트 사용 (권장)
 ```bash
